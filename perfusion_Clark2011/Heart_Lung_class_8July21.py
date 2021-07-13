@@ -406,9 +406,9 @@ if __name__ == '__main__':
     # activation_ventricles and activation_atria
     e_v = {}
     e_a = {}
-    #stream = open("perfusion_Clark2011.py")
-    #read_file = stream.read()
-    #exec(read_file)
+    # stream = open("perfusion_Clark2011.py")
+    # read_file = stream.read()
+    # exec(read_file)
 
     # blood_press_Atria_ventricles
     P_ra = {}
@@ -482,10 +482,10 @@ if __name__ == '__main__':
 
         # Calculate blood flow in atria and ventricles regarding their time
         [Q_ra[i], Q_rv[i], Q_la[i], Q_lv[i]] = heart_lung_obj.Blood_Flow_Atria_ventricles()
-        # Q_ra_So[i] = Q_ra[i]
-        # Q_rv_So[i] = Q_rv[i]
-        # Q_la_So[i] = Q_la[i]
-        # Q_lv_So[i] = Q_lv[i]
+        Q_ra_So[i] = Q_ra[i]
+        Q_rv_So[i] = Q_rv[i]
+        Q_la_So[i] = Q_la[i]
+        Q_lv_So[i] = Q_lv[i]
 
         # Calculate blood volume changes in atria and ventricles regarding their time
         [der_volume_RA[i], der_volume_RV[i], der_volume_LA[i], der_volume_LV[i]] = heart_lung_obj.Blood_Volume_Atria_ventricles()
@@ -505,9 +505,9 @@ if __name__ == '__main__':
           #In these loops first we get the privious P_rv and P_la and put them in perfusion function. Then we run the heart model, but aftre running the perfusion model we received the flow and we replace the flow from perfusion function with Q_rv and Q_la in heart
           #P_rv[0] = 11929.443538438134
           #P_la[0] = 202.33952809536052
-          # perfusion(P_rv[i - 1], P_la[i - 1], i)
-          # flow = read_file()
-          #Q_vein = flow
+          perfusion(P_rv[i - 1], P_la[i - 1], i)
+          flow = read_file()
+          Q_vein = flow
 
           mt = heart_lung_obj.t[i] - heart_lung_obj.T * floor(heart_lung_obj.t[i] / heart_lung_obj.T)
 
@@ -531,8 +531,8 @@ if __name__ == '__main__':
           Q_la_So[i] = Q_la[i]
           Q_lv_So[i] = Q_lv[i]
 
-          # Q_rv[i] = flow
-          # Q_la[i] = flow
+          Q_rv[i] = flow
+          Q_la[i] = flow
 
 
           heart_lung_obj.Q_rv = Q_rv[i] #replace new values in flow function
@@ -544,13 +544,13 @@ if __name__ == '__main__':
           # Calculate blood pressure and volume in systemic circulation regarding its time
           [der_systemic_press_artery[i], der_systemic_press_vein[i], der_systemic_flow_artery[i], der_systemic_flow_vein[i]] = heart_lung_obj.systemic_circulation()
 
-    # plot_results(e_a, 'Time', 'Value', 'Activation Atria')
-    # plot_results(e_v, 'Time', 'Value', 'Activation Ventricle')
+    plot_results(e_a, 'Time', 'Value', 'Activation Atria')
+    plot_results(e_v, 'Time', 'Value', 'Activation Ventricle')
 
-    # plot_results(P_la, 'Time', 'Value', 'Left Atrium Pressure')
-    # plot_results(P_lv, 'Time', 'Value', 'Left Ventricle Pressure')
-    # plot_results(P_ra, 'Time', 'Value', 'Right Atrium Pressure')
-    # plot_results(P_rv, 'Time', 'Value', 'Right Ventricle Pressure')
+    plot_results(P_la, 'Time', 'Value', 'Left Atrium Pressure')
+    plot_results(P_lv, 'Time', 'Value', 'Left Ventricle Pressure')
+    plot_results(P_ra, 'Time', 'Value', 'Right Atrium Pressure')
+    plot_results(P_rv, 'Time', 'Value', 'Right Ventricle Pressure')
 
     # plot_results(P_la_So, 'Time', 'Value', 'Left Atrium Pressure')
     # plot_results(P_lv_So, 'Time', 'Value', 'Left Ventricle Pressure')
@@ -558,15 +558,15 @@ if __name__ == '__main__':
     # plot_results(P_rv_So, 'Time', 'Value', 'Right Ventricle Pressure')
 
 
-    # plot_results(Q_la, 'Time', 'Value', 'Left Atrium Flow', Q_la_So)
-    # plot_results(Q_lv, 'Time', 'Value', 'Left Ventricle Flow', Q_lv_So)
-    # plot_results(Q_ra, 'Time', 'Value', 'Right atrium Flow', Q_ra_So)
-    # plot_results(Q_rv, 'Time', 'Value', 'Right Ventricle Flow', Q_rv_So)
+    plot_results(Q_la, 'Time', 'Value', 'Left Atrium Flow', Q_la_So)
+    plot_results(Q_lv, 'Time', 'Value', 'Left Ventricle Flow', Q_lv_So)
+    plot_results(Q_ra, 'Time', 'Value', 'Right atrium Flow', Q_ra_So)
+    plot_results(Q_rv, 'Time', 'Value', 'Right Ventricle Flow', Q_rv_So)
 
-    plot_results(Q_la, 'Time', 'Value', 'Left Atrium Flow')
-    plot_results(Q_lv, 'Time', 'Value', 'Left Ventricle Flow')
-    plot_results(Q_ra, 'Time', 'Value', 'Right atrium Flow')
-    plot_results(Q_rv, 'Time', 'Value', 'Right Ventricle Flow')
+    # plot_results(Q_la, 'Time', 'Value', 'Left Atrium Flow')
+    # plot_results(Q_lv, 'Time', 'Value', 'Left Ventricle Flow')
+    # plot_results(Q_ra, 'Time', 'Value', 'Right atrium Flow')
+    # plot_results(Q_rv, 'Time', 'Value', 'Right Ventricle Flow')
 
     plot_results(der_volume_RA, 'Time', 'Value', 'blood volume changes in RA')
     plot_results(der_volume_RV, 'Time', 'Value', 'blood volume changes in RV')
@@ -579,10 +579,10 @@ if __name__ == '__main__':
     # plot_results(der_flow_artery, 'Time', 'Value', 'Pulmonary Artery Flow')
     # plot_results(der_flow_vein, 'Time', 'Value', 'Pulmonary Vein Flow')
 
-    # plot_results(der_systemic_press_artery, 'Time', 'Value', 'Systemic Artery Pressure')
-    # plot_results(der_systemic_press_vein, 'Time', 'Value', 'Systemic Vein Pressure')
-    # plot_results(der_systemic_flow_artery, 'Time', 'Value', 'Systemic Artery Flow')
-    # plot_results(der_systemic_flow_vein, 'Time', 'Value', 'Systemic Vein Flow')
+    plot_results(der_systemic_press_artery, 'Time', 'Value', 'Systemic Artery Pressure')
+    plot_results(der_systemic_press_vein, 'Time', 'Value', 'Systemic Vein Pressure')
+    plot_results(der_systemic_flow_artery, 'Time', 'Value', 'Systemic Artery Flow')
+    plot_results(der_systemic_flow_vein, 'Time', 'Value', 'Systemic Vein Flow')
 
 
 
