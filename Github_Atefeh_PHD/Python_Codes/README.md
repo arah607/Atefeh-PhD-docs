@@ -14,7 +14,7 @@ To run the Heart_Lung_scipy, the following packages are required to be installed
    
 
 
-To run both python files, three inputs are necessary:
+When python files are run, three inputs are requested from user to give as input:
    1- The first element of interval (I assume it is 0, but different can be considered) 
    2- The last element of interval (I assume it is 10, but different can be considered) 
    3- The number of splitting intervals (I assume it is 500, but different can be considered) 
