@@ -19,74 +19,76 @@ from scipy.integrate import odeint
 class Heart_Lung:
     def __init__(self):
         #Model parameters
-        self.T_vc = 0.34  # The duration of ventricles contraction
-        self.T_vr = 0.15  # The duration of ventricles relaxation
-        self.t_ar = 0.97  # The time when the atria start to relax
-        self.T_ar = 0.17  # The duration of atria relaxation
-        self.t_ac = 0.80  # The time when the atria start to contraction
-        self.T_ac = 0.17  # The duration of atria contraction
+        self.T_vc = 0.34  # The duration of ventricles contraction (dimensionless)
+        self.T_vr = 0.15  # The duration of ventricles relaxation (dimensionless)
+        self.t_ar = 0.97  # The time when the atria start to relax (dimensionless)
+        self.T_ar = 0.17  # The duration of atria relaxation (dimensionless)
+        self.t_ac = 0.80  # The time when the atria start to contraction (dimensionless)
+        self.T_ac = 0.17  # The duration of atria contraction (dimensionless)
 
         # blood_pressure_Atria_ventricles
-        self.E_ra_A = 7.998e+6  # amplitude value of the RA elastance
-        self.E_ra_B = 9.331e+6  # baseline value of the RA elastance
+        self.E_ra_A = 7.998e+6  # amplitude value of the RA elastance (J_per_m6)
+        self.E_ra_B = 9.331e+6  # baseline value of the RA elastance (J_per_m6)
         #self.V_ra = 20.0e-6  # Initial blood volume of RA
-        self.V_ra_0 = 4.0e-6  # dead blood volume of RA
+        self.V_ra_0 = 4.0e-6  # dead blood volume of RA (m3)
 
-        self.E_rv_A = 73.315e+6  # amplitude value of the RV elastance
-        self.E_rv_B = 6.665e+6  # baseline value of the RV elastance
+        self.E_rv_A = 73.315e+6  # amplitude value of the RV elastance (J_per_m6)
+        self.E_rv_B = 6.665e+6  # baseline value of the RV elastance (J_per_m6)
         #self.V_rv = 500.0e-6  # Initial blood volume of RV
-        self.V_rv_0 = 10.0e-6  # dead blood volume of RV
+        self.V_rv_0 = 10.0e-6  # dead blood volume of RV (m3)
 
-        self.E_la_A = 9.331e+6  # amplitude value of the LA elastance
-        self.E_la_B = 11.997e+6  # baseline value of the LA elastance
+        self.E_la_A = 9.331e+6  # amplitude value of the LA elastance (J_per_m6)
+        self.E_la_B = 11.997e+6  # baseline value of the LA elastance (J_per_m6)
         #self.V_la = 20.0e-6  # blood volume of LA
-        self.V_la_0 = 4.0e-6  # dead blood volume of LA
+        self.V_la_0 = 4.0e-6  # dead blood volume of LA (m3)
 
-        self.E_lv_A = 366.575e+6  # amplitude value of the LV elastance
-        self.E_lv_B = 10.664e+6  # baseline value of the LV elastance
+        self.E_lv_A = 366.575e+6  # amplitude value of the LV elastance (J_per_m6)
+        self.E_lv_B = 10.664e+6  # baseline value of the LV elastance (J_per_m6)
         #self.V_lv = 500.0e-6  # blood volume of LV
-        self.V_lv_0 = 5.0e-6  # dead blood volume of LV
+        self.V_lv_0 = 5.0e-6  # dead blood volume of LV (m3)
 
         # blood_flow_atria_ventricles
-        self.CQ_trv = 34.6427e-6  # triscupid valve coefficient
-        self.CQ_puv = 30.3124e-6  # pulmonary valve coefficient
+        self.CQ_trv = 34.6427e-6  # triscupid valve coefficient (UnitValve)
+        self.CQ_puv = 30.3124e-6  # pulmonary valve coefficient (UnitValve)
         #self.P_pulmonary_artery = 4000.0  # pulmonary arteries
-        self.CQ_miv = 34.6427e-6  # mitral valve coefficient
-        self.CQ_aov = 30.3124e-6  # aortic valve coefficient
-        self.P_root = 0 #blood pressure in the aortic root
+        self.CQ_miv = 34.6427e-6  # mitral valve coefficient (UnitValve)
+        self.CQ_aov = 30.3124e-6  # aortic valve coefficient (UnitValve)
+        self.P_root = 0 #blood pressure in the aortic root (J_per_m3)
 
 
         # blood_volume_Atria_ventricles
-        self.Q_sup_venacava = 4.21324067213557e-5  # blood flow superior vena cava
+        self.Q_sup_venacava = 4.21324067213557e-5  # blood flow superior vena cava (m3_per_s)
         # self.Q_sup_venacava = 0  # blood flow superior vena cava
-        self.Q_inf_venacava = 4.11763993353109e-5  # blood flow inferior vena cava
+        self.Q_inf_venacava = 4.11763993353109e-5  # blood flow inferior vena cava (m3_per_s)
         # self.Q_inf_venacava = 0  # blood flow inferior vena cava
         #self.Q_pulmonary_vein = 0  # vein flow
 
         # pulmonary circulation
         #self.Q_pulmonary_artery = 0  # artery flow
-        self.C_pulmonary_artery = 0.0309077e-6  # artery compliance
-        self.I_pulmonary_artery = 1.0e+6  # artery inductance
-        self.R_pulmonary_artery = 10.664e+6  # artery resistance
-        self.C_pulmonary_vein = 0.60015e-6  # vein compliance
+        self.C_pulmonary_artery = 0.0309077e-6  # artery compliance (m6_per_J)
+        self.I_pulmonary_artery = 1.0e+6  # artery inductance (Js2_per_m6)
+        # self.I_pulmonary_artery = 0.00693  # new version value
+        self.R_pulmonary_artery = 10.664e+6  # artery resistance (Js_per_m6)
+        self.C_pulmonary_vein = 0.60015e-6  # vein compliance (m6_per_J)
        # self.P_pulmonary_vein = 0  # # vein pressure
-        self.R_pulmonary_vein = 1.333e+6  # vein resistance
-        self.I_pulmonary_vein = 1.0e+6  # vein inductance
+        self.R_pulmonary_vein = 1.333e+6  # vein resistance (Js_per_m6)
+        self.I_pulmonary_vein = 1.0e+6  # vein inductance (Js2_per_m6)
+        # self.I_pulmonary_vein = 0.22665 # new version value
 
 
-        self.T = 1  # duration of a cardiac cycle
+        self.T = 1  # duration of a cardiac cycle (second)
         
         
         ######INITIAL CONDITIONS####################
         # Initial value for v_ra, v_rv, v_la, and v_lv
-        self.V_ra_initial = 20.0e-6
-        self.V_rv_initial = 500.0e-6
-        self.V_la_initial = 20.0e-6
-        self.V_lv_initial = 500.0e-6
-        self.P_pulmonary_artery_initial = 4000.
-        self.P_pulmonary_vein_initial = 2000.
-        self.Q_pulmonary_artery_initial = 0.
-        self.Q_pulmonary_vein_initial = 0.
+        self.V_ra_initial = 20.0e-6  # blood volume of RA (m3)
+        self.V_rv_initial = 500.0e-6 # blood volume of RV (m3)
+        self.V_la_initial = 20.0e-6  # blood volume of LA (m3)
+        self.V_lv_initial = 500.0e-6 # blood volume of LV (m3)
+        self.P_pulmonary_artery_initial = 4000.  # pulmonary artery pressure (J_per_m3)
+        self.P_pulmonary_vein_initial = 2000.    # pulmonary vein pressure (J_per_m3)
+        self.Q_pulmonary_artery_initial = 0. # pulmonary artery flow (m3_per_s)
+        self.Q_pulmonary_vein_initial = 0.   # pulmonary vein flow (m3_per_s)
         
         
         self.V_ra = self.V_ra_initial 
@@ -222,20 +224,24 @@ class Heart_Lung:
 
         self.der_pulmonary_press_artery = (self.Q_rv - self.Q_pulmonary_artery) / self.C_pulmonary_artery  # pressure changes in artery
         
-        print('pulm circulation1',self.Q_rv,self.Q_pulmonary_artery,self.C_pulmonary_artery,self.der_pulmonary_press_artery)
+        # print('pulm circulation1',self.Q_rv,self.Q_pulmonary_artery,self.C_pulmonary_artery,self.der_pulmonary_press_artery)
 
         self.der_pulmonary_press_vein = (self.Q_pulmonary_artery - self.Q_pulmonary_vein) / self.C_pulmonary_vein  # pressure changes in vein
         
-        print('pulm circulation2',self.Q_pulmonary_artery,self.Q_pulmonary_vein,self.C_pulmonary_vein,self.der_pulmonary_press_vein)
+        # print('pulm circulation2',self.Q_pulmonary_artery,self.Q_pulmonary_vein,self.C_pulmonary_vein,self.der_pulmonary_press_vein)
 
-        self.der_pulmonary_flow_artery = (self.P_pulmonary_artery - self.P_pulmonary_vein - self.Q_pulmonary_artery * self.R_pulmonary_artery) / self.I_pulmonary_artery  # flow changes in artery
+        # self.der_pulmonary_flow_artery = (self.P_pulmonary_artery - self.P_pulmonary_vein - self.Q_pulmonary_artery * self.R_pulmonary_artery) / self.I_pulmonary_artery  # flow changes in artery
+        # self.der_pulmonary_flow_artery = (self.P_pulmonary_artery - self.P_pulmonary_vein ) / self.R_pulmonary_artery  # flow changes in artery
 
-        print('pulm circulation3',self.P_pulmonary_artery,self.P_pulmonary_vein,self.Q_pulmonary_artery,self.R_pulmonary_artery,self.I_pulmonary_artery,self.der_pulmonary_flow_artery)
 
-        self.der_pulmonary_flow_vein = (self.P_pulmonary_vein - self.P_la - self.Q_pulmonary_vein * self.R_pulmonary_vein) / self.I_pulmonary_vein  # flow changes in vein
-        print('pulm circulation4',self.P_pulmonary_vein,self.P_la,self.Q_pulmonary_vein,self.R_pulmonary_vein,self.I_pulmonary_vein,self.der_pulmonary_flow_artery)
+        # print('pulm circulation3',self.P_pulmonary_artery,self.P_pulmonary_vein,self.Q_pulmonary_artery,self.R_pulmonary_artery,self.I_pulmonary_artery,self.der_pulmonary_flow_artery)
 
-        return (self.der_pulmonary_press_artery, self.der_pulmonary_press_vein, self.der_pulmonary_flow_artery, self.der_pulmonary_flow_vein)
+        # self.der_pulmonary_flow_vein = (self.P_pulmonary_vein - self.P_la - self.Q_pulmonary_vein * self.R_pulmonary_vein) / self.I_pulmonary_vein  # flow changes in vein
+        # self.der_pulmonary_flow_vein = (self.P_pulmonary_vein - self.P_la ) / self.R_pulmonary_vein  # flow changes in vein
+
+        #print('pulm circulation4',self.P_pulmonary_vein,self.P_la,self.Q_pulmonary_vein,self.R_pulmonary_vein,self.I_pulmonary_vein,self.der_pulmonary_flow_artery)
+
+        return (self.der_pulmonary_press_artery, self.der_pulmonary_press_vein)#, self.der_pulmonary_flow_artery, self.der_pulmonary_flow_vein)
 
 
 
@@ -261,7 +267,7 @@ class Heart_Lung:
         # Calculate P_pulmonary_artery from three last previous points
         else:
             self.P_pulmonary_artery = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6]))/3
-
+        # self.P_pulmonary_artery = args[2] + ((args[1] - args[0]) * args[3])
         return self.P_pulmonary_artery
 
     def Finite_diff_meth_Pulmonary_press_vein(self, *args):
@@ -286,62 +292,74 @@ class Heart_Lung:
         # Calculate P_pulmonary_vein from three last previous points
         else:
             self.P_pulmonary_vein = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6])) / 3
-
+        # self.P_pulmonary_vein = args[2] + ((args[1] - args[0]) * args[3])
         return self.P_pulmonary_vein
 
-    def Finite_diff_meth_Pulmonary_flow_artery(self, *args):
+    # def Finite_diff_meth_Pulmonary_flow_artery(self, *args):
+    #
+    #     ''' This function calculate the Pulmonary artery flow with using previous points. If we want to calculate Pulmonary artery flow for t=1, we use
+    #     the previous point. If we want to calculate the Pulmonary artery flow for t=2, two previous points are required and if we intend to calulate Pulmonary artery flow
+    #     for t>=3, we use the 3 points before to calculate the new point
+    #      if i==1
+    #             Q_pulmonary_artery[i] = Q_pulmonary_artery[i-1] + h * der_pulmonary_flow_artery[i-1]
+    #         if i==2:
+    #             Q_pulmonary_artery[i] = (Q_pulmonary_artery[i-2] + Q_pulmonary_artery[i-1] + (3 * h * der_pulmonary_flow_artery[i-1])) / 2
+    #         if i>= 3:
+    #             Q_pulmonary_artery[i] = (Q_pulmonary_artery[i-3] + Q_pulmonary_artery[i-2] + Q_pulmonary_artery[i-1] + (6 * h * der_pulmonary_flow_artery[i-1])) / 3
+    #         '''
+    #
+    #     # Calculate Q_pulmonary_artery from previous point
+    #     if args[0] == 1:
+    #         self.Q_pulmonary_artery = args[3] + (
+    #                     (args[2] - args[1]) * args[4])
+    #     # Calculate Q_pulmonary_artery from two last previous points
+    #     elif args[0] == 2:
+    #         self.Q_pulmonary_artery = (args[3] + args[4] + (3 * (args[2] - args[1]) * args[
+    #             5])) / 2
+    #     # Calculate Q_pulmonary_artery from three last previous points
+    #     else:
+    #         self.Q_pulmonary_artery = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6])) / 3
+    #     # self.Q_pulmonary_artery = args[2] + ((args[1] - args[0]) * args[3])
+    #
+    #     return self.Q_pulmonary_artery
+    #
+    # def Finite_diff_meth_Pulmonary_flow_vein(self, *args):
+    #     ''' This function calculate the Pulmonary vein flow with using previous points. If we want to calculate Pulmonary vein flow for t=1, we use
+    #          the previous point. If we want to calculate the Pulmonary vein flow for t=2, two previous points are required and if we intend to calulate Pulmonary vein flow
+    #          for t>=3, we use the 3 points before to calculate the new point
+    #           if i==1
+    #                  Q_pulmonary_vein[i] = Q_pulmonary_vein[i-1] + h * der_pulmonary_flow_vein[i-1]
+    #           if i==2:
+    #                  Q_pulmonary_vein[i] = (Q_pulmonary_vein[i-2] + Q_pulmonary_vein[i-1] + (3 * h * der_pulmonary_flow_vein[i-1])) / 2
+    #           if i>= 3:
+    #                  Q_pulmonary_vein[i] = (Q_pulmonary_vein[i-3] + Q_pulmonary_vein[i-2] + Q_pulmonary_vein[i-1] + (6 * h * der_pulmonary_flow_vein[i-1])) / 3
+    #              '''
+    #
+    #     # Calculate Q_pulmonary_vein from previous point
+    #     if args[0] == 1:
+    #         self.Q_pulmonary_vein = args[3] + (
+    #                     (args[2] - args[1]) * args[4])
+    #
+    #     # Calculate Q_pulmonary_vein from two last previous points
+    #     elif args[0] == 2:
+    #         self.Q_pulmonary_vein = (args[3] + args[4] + (3 * (args[2] - args[1]) * args[
+    #             5])) / 2
+    #     # Calculate Q_pulmonary_vein from three last previous points
+    #     else:
+    #         self.Q_pulmonary_vein = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6])) / 3
+    #     # self.Q_pulmonary_vein = args[2] + ((args[1] - args[0]) * args[3])
+    #
+    #     return self.Q_pulmonary_vein
 
-        ''' This function calculate the Pulmonary artery flow with using previous points. If we want to calculate Pulmonary artery flow for t=1, we use
-        the previous point. If we want to calculate the Pulmonary artery flow for t=2, two previous points are required and if we intend to calulate Pulmonary artery flow
-        for t>=3, we use the 3 points before to calculate the new point
-         if i==1
-                Q_pulmonary_artery[i] = Q_pulmonary_artery[i-1] + h * der_pulmonary_flow_artery[i-1]
-            if i==2:
-                Q_pulmonary_artery[i] = (Q_pulmonary_artery[i-2] + Q_pulmonary_artery[i-1] + (3 * h * der_pulmonary_flow_artery[i-1])) / 2
-            if i>= 3:
-                Q_pulmonary_artery[i] = (Q_pulmonary_artery[i-3] + Q_pulmonary_artery[i-2] + Q_pulmonary_artery[i-1] + (6 * h * der_pulmonary_flow_artery[i-1])) / 3
-            '''
 
-        # Calculate Q_pulmonary_artery from previous point
-        if args[0] == 1:
-            self.Q_pulmonary_artery = args[3] + (
-                        (args[2] - args[1]) * args[4])
-        # Calculate Q_pulmonary_artery from two last previous points
-        elif args[0] == 2:
-            self.Q_pulmonary_artery = (args[3] + args[4] + (3 * (args[2] - args[1]) * args[
-                5])) / 2
-        # Calculate Q_pulmonary_artery from three last previous points
-        else:
-            self.Q_pulmonary_artery = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6])) / 3
+    def Pulmonary_flow_vein_artery(self):
+        ''' This function calculates the blood flow in pulmonary artery and vein based on resistance'''
 
-        return self.Q_pulmonary_artery
+        self.pulmonary_flow_artery = (self.P_pulmonary_artery - self.P_pulmonary_vein) / self.R_pulmonary_artery  # blood flow in artery
+        self.pulmonary_flow_vein = (self.P_pulmonary_vein - self.P_la ) / self.R_pulmonary_vein  # blood flow in vein
 
-    def Finite_diff_meth_Pulmonary_flow_vein(self, *args):
-        ''' This function calculate the Pulmonary vein flow with using previous points. If we want to calculate Pulmonary vein flow for t=1, we use
-             the previous point. If we want to calculate the Pulmonary vein flow for t=2, two previous points are required and if we intend to calulate Pulmonary vein flow
-             for t>=3, we use the 3 points before to calculate the new point
-              if i==1
-                     Q_pulmonary_vein[i] = Q_pulmonary_vein[i-1] + h * der_pulmonary_flow_vein[i-1]
-              if i==2:
-                     Q_pulmonary_vein[i] = (Q_pulmonary_vein[i-2] + Q_pulmonary_vein[i-1] + (3 * h * der_pulmonary_flow_vein[i-1])) / 2
-              if i>= 3:
-                     Q_pulmonary_vein[i] = (Q_pulmonary_vein[i-3] + Q_pulmonary_vein[i-2] + Q_pulmonary_vein[i-1] + (6 * h * der_pulmonary_flow_vein[i-1])) / 3
-                 '''
+        return (self.pulmonary_flow_artery,  self.pulmonary_flow_vein)
 
-        # Calculate Q_pulmonary_vein from previous point
-        if args[0] == 1:
-            self.Q_pulmonary_vein = args[3] + (
-                        (args[2] - args[1]) * args[4])
-
-        # Calculate Q_pulmonary_vein from two last previous points
-        elif args[0] == 2:
-            self.Q_pulmonary_vein = (args[3] + args[4] + (3 * (args[2] - args[1]) * args[
-                5])) / 2
-        # Calculate Q_pulmonary_vein from three last previous points
-        else:
-            self.Q_pulmonary_vein = (args[3] + args[4] + args[5] + (6 * (args[2] - args[1]) * args[6])) / 3
-
-        return self.Q_pulmonary_vein
 
 
 
@@ -399,13 +417,18 @@ def print_results(*arg):
 
     print("der_pulmonary_press_artery:" + str([(k, arg[18][k]) for k in arg[18]]))
     print("der_pulmonary_press_vein:" + str([(k, arg[19][k]) for k in arg[19]]))
-    print("der_pulmonary_flow_artery:" + str([(k, arg[20][k]) for k in arg[20]]))
-    print("der_pulmonary_flow_vein:" + str([(k, arg[21][k]) for k in arg[21]]))
+    # print("der_pulmonary_flow_artery:" + str([(k, arg[20][k]) for k in arg[20]]))
+    # print("der_pulmonary_flow_vein:" + str([(k, arg[21][k]) for k in arg[21]]))
 
-    print("P_pulmonary_artery:" + str([(k, arg[22][k]) for k in arg[22]]))
-    print("P_pulmonary_vein:" + str([(k, arg[23][k]) for k in arg[23]]))
-    print("Q_pulmonary_artery:" + str([(k, arg[24][k]) for k in arg[24]]))
-    print("Q_pulmonary_vein:" + str([(k, arg[25][k]) for k in arg[25]]))
+    # print("P_pulmonary_artery:" + str([(k, arg[22][k]) for k in arg[22]]))
+    # print("P_pulmonary_vein:" + str([(k, arg[23][k]) for k in arg[23]]))
+    # print("Q_pulmonary_artery:" + str([(k, arg[24][k]) for k in arg[24]]))
+    # print("Q_pulmonary_vein:" + str([(k, arg[25][k]) for k in arg[25]]))
+
+    print("P_pulmonary_artery:" + str([(k, arg[20][k]) for k in arg[20]]))
+    print("P_pulmonary_vein:" + str([(k, arg[21][k]) for k in arg[21]]))
+    print("Q_pulmonary_artery:" + str([(k, arg[22][k]) for k in arg[22]]))
+    print("Q_pulmonary_vein:" + str([(k, arg[23][k]) for k in arg[23]]))
 
 
 
@@ -518,8 +541,7 @@ if __name__ == '__main__':
 
 
             # Calculate blood pressure and volume in pulmonary circulation regarding its time
-            [der_pulmonary_press_artery[i], der_pulmonary_press_vein[i], der_pulmonary_flow_artery[i],
-             der_pulmonary_flow_vein[i]] = heart_lung_obj.pulmonary_circulation()
+            [der_pulmonary_press_artery[i], der_pulmonary_press_vein[i]] = heart_lung_obj.pulmonary_circulation()
 
 
         else:
@@ -555,21 +577,21 @@ if __name__ == '__main__':
             [P_ra[i], P_rv[i], P_la[i], P_lv[i]] = heart_lung_obj.Blood_Press_Atria_Ventricles(V_ra[i], V_rv[i],
                                                                                                V_la[i], V_lv[i])
 
-            #Calculate blood pressure and flow in pulmonary arteries and veins regarding their time
+            #Calculate blood pressure in pulmonary arteries and veins regarding their time
             if i == 1:
-               P_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_artery(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], P_pulmonary_artery[i-1], der_pulmonary_press_artery[i-1])
-               P_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_vein(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], P_pulmonary_vein[i-1], der_pulmonary_press_vein[i-1])
-               Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], Q_pulmonary_artery[i-1], der_pulmonary_flow_artery[i-1])
-               Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], Q_pulmonary_vein[i-1], der_pulmonary_flow_vein[i-1])
+                P_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_artery(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], P_pulmonary_artery[i-1], der_pulmonary_press_artery[i-1])
+                P_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_vein(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], P_pulmonary_vein[i-1], der_pulmonary_press_vein[i-1])
+                #Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], Q_pulmonary_artery[i-1], der_pulmonary_flow_artery[i-1])
+                #Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i,heart_lung_obj.t[i-1],heart_lung_obj.t[i], Q_pulmonary_vein[i-1], der_pulmonary_flow_vein[i-1])
             elif i == 2:
                P_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], P_pulmonary_artery[i - 2], P_pulmonary_artery[i - 1],
                                                                                                   der_pulmonary_press_artery[i - 1])
                P_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_vein(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], P_pulmonary_vein[i - 2], P_pulmonary_vein[i - 1],
                                                                                                   der_pulmonary_press_vein[i - 1])
-               Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], Q_pulmonary_artery[i - 2], Q_pulmonary_artery[i - 1],
-                                                                                                  der_pulmonary_flow_artery[i - 1])
-               Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], Q_pulmonary_vein[i - 2], Q_pulmonary_vein[i - 1],
-                                                                                                  der_pulmonary_flow_vein[i - 1])
+               # Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], Q_pulmonary_artery[i - 2], Q_pulmonary_artery[i - 1],
+               #                                                                                   der_pulmonary_flow_artery[i - 1])
+               # Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i], Q_pulmonary_vein[i - 2], Q_pulmonary_vein[i - 1],
+               #                                                                                   der_pulmonary_flow_vein[i - 1])
 
             else:
                 P_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_press_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i],
@@ -588,24 +610,30 @@ if __name__ == '__main__':
                                                                                                P_pulmonary_vein[i - 1],
                                                                                                der_pulmonary_press_vein[i - 1])
 
-                Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i],
-                                                                                               Q_pulmonary_artery[
-                                                                                                   i - 3],
-                                                                                               Q_pulmonary_artery[
-                                                                                                   i - 2],
-                                                                                               Q_pulmonary_artery[i - 1],
-                                                                                               der_pulmonary_flow_artery[i - 1])
-
-                Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i],
-                                                                                               Q_pulmonary_vein[
-                                                                                                   i - 3],
-                                                                                               Q_pulmonary_vein[
-                                                                                                   i - 2],
-                                                                                               Q_pulmonary_vein[i - 1],
-                                                                                               der_pulmonary_flow_vein[i - 1])
+                # Q_pulmonary_artery[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_artery(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i],
+                #                                                                                Q_pulmonary_artery[
+                #                                                                                    i - 3],
+                #                                                                                Q_pulmonary_artery[
+                #                                                                                    i - 2],
+                #                                                                                Q_pulmonary_artery[i - 1],
+                #                                                                                der_pulmonary_flow_artery[i - 1])
+                #
+                # Q_pulmonary_vein[i] = heart_lung_obj.Finite_diff_meth_Pulmonary_flow_vein(i, heart_lung_obj.t[i - 1], heart_lung_obj.t[i],
+                #                                                                                Q_pulmonary_vein[
+                #                                                                                    i - 3],
+                #                                                                                Q_pulmonary_vein[
+                #                                                                                    i - 2],
+                #                                                                                Q_pulmonary_vein[i - 1],
+                #                                                                                der_pulmonary_flow_vein[i - 1])
 
             heart_lung_obj.P_pulmonary_artery = P_pulmonary_artery[i]
             heart_lung_obj.P_pulmonary_vein = P_pulmonary_vein[i]
+            # heart_lung_obj.Q_pulmonary_artery = Q_pulmonary_artery[i]
+            # heart_lung_obj.Q_pulmonary_vein = Q_pulmonary_vein[i]
+
+
+            #Calculate blood flow in pulmonary arteries and veins regarding their time
+            [Q_pulmonary_artery[i], Q_pulmonary_vein[i]] = heart_lung_obj.Pulmonary_flow_vein_artery()
             heart_lung_obj.Q_pulmonary_artery = Q_pulmonary_artery[i]
             heart_lung_obj.Q_pulmonary_vein = Q_pulmonary_vein[i]
 
@@ -619,8 +647,7 @@ if __name__ == '__main__':
              der_volume_LV[i]] = heart_lung_obj.Blood_Volume_changes_Atria_ventricles()
 
             # Calculate blood pressure and volume in pulmonary circulation regarding its time
-            [der_pulmonary_press_artery[i], der_pulmonary_press_vein[i], der_pulmonary_flow_artery[i],
-             der_pulmonary_flow_vein[i]] = heart_lung_obj.pulmonary_circulation()
+            [der_pulmonary_press_artery[i], der_pulmonary_press_vein[i]] = heart_lung_obj.pulmonary_circulation()
              
              
  
@@ -649,8 +676,8 @@ if __name__ == '__main__':
 
     plot_results(der_pulmonary_press_artery, 'Time', 'Value', 'Pulmonary Artery Pressure changes')
     plot_results(der_pulmonary_press_vein, 'Time', 'Value', 'Pulmonary Vein Pressure changes')
-    plot_results(der_pulmonary_flow_artery, 'Time', 'Value', 'Pulmonary Artery Flow changes')
-    plot_results(der_pulmonary_flow_vein, 'Time', 'Value', 'Pulmonary Vein Flow changes')
+    # plot_results(der_pulmonary_flow_artery, 'Time', 'Value', 'Pulmonary Artery Flow changes')
+    # plot_results(der_pulmonary_flow_vein, 'Time', 'Value', 'Pulmonary Vein Flow changes')
 
     plot_results(P_pulmonary_artery, 'Time', 'Value', 'Pulmonary Artery Pressure')
     plot_results(P_pulmonary_vein, 'Time', 'Value', 'Pulmonary Vein Pressure')
@@ -661,5 +688,4 @@ if __name__ == '__main__':
 
     print_results(e_a, e_v, P_ra, P_rv, P_la, P_lv, Q_la, Q_lv, Q_ra, Q_rv, der_volume_RA, der_volume_RV, der_volume_LA,
                   der_volume_LV, V_ra, V_rv, V_la, V_lv, der_pulmonary_press_artery, der_pulmonary_press_vein,
-                  der_pulmonary_flow_artery,
-                  der_pulmonary_flow_vein, P_pulmonary_artery, P_pulmonary_vein, Q_pulmonary_artery, Q_pulmonary_vein)
+                   P_pulmonary_artery, P_pulmonary_vein, Q_pulmonary_artery, Q_pulmonary_vein)
